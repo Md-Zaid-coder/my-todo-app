@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>My Todo App</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif; max-width: 500px; margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+          }
+            input{
+                padding: 8px; width: 70%;
+                font-size: 16px;
+            }
+            button {
+                padding: 8px 16px; cursor: pointer;
+            }
+            li {
+                font-size: 18px; margin: 10px 0;
+            }
+            .container {
+                background-color: #ffffff;
+                max-width: 500px;
+                margin: 50px auto;
+                padding: 30px;
+                border-radius: 16px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #2c3e50;
+                font-size: 28px;
+                margin-bottom: 20px;
+                text-align: center;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+    <h1>My Todo List</h1>
+
+    <input type="text" id="taskInput" placeholder="Type your task here..." />
+    <button onclick="addTask()">Add Task</button>
+
+    <ul id="todoList"></ul>
+        </
+    <script>
+
+        // Load saved tasks from browser
+        let tasks = JSON.parse(localStorage.getItem("myTasks") || "[]");
+
+        // Show saved tasks immediately on page load
+        render();
+
+        function addTask() {
+            let input = document.getElementById("taskInput");
+            let text = input.value;
+            if (text === "") {
+                alert("Please type a task first!");
+                return;
+            }
+            tasks.push({ text: text, done: false });
+            input.value = "";
+            save();
+            render();
+        }
+
+        function render() {
+            let list = document.getElementById("todoList");
+            list.innerHTML = "";
+            for (let i = 0; i < tasks.length; i++) {
+                let li = document.createElement("li");
+                li.innerHTML = tasks[i].text
+                    + " <button onclick='markDone(" + i + ")'>✅ Done</button>"
+                    + " <button onclick='deleteTask(" + i + ")'>❌ Delete</button>";
+                if (tasks[i].done === true) {
+                    li.style.textDecoration = "line-through";
+                    li.style.color = "gray";
+                }
+                list.appendChild(li);
+            }
+        }
+
+        function markDone(index) {
+            tasks[index].done = true;
+            save();
+            render();
+        }
+
+        function deleteTask(index) {
+            tasks.splice(index, 1);
+            save();
+            render();
+        }
+
+        function save() {
+            localStorage.setItem("myTasks", JSON.stringify(tasks));
+        }
+
+    </script>
+
+</body>
+</html>
